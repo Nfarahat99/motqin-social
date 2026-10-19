@@ -90,7 +90,9 @@ if (args.includes("--list")) {
 } else if (args.includes("--due")) {
   const now = Date.now();
   const late = (q) => (now - ksaTime(q).getTime()) / 3.6e6;
-  const pending = queue.filter((q) => !isDone(q) && late(q) >= 0);
+  // A platform without credentials yet (e.g. X before its keys arrive) is left waiting, not failed.
+  const ready = (q) => (q.platform === "X" ? !!env.X_API_KEY : !!env.INSTAGRAM_ACCESS_TOKEN);
+  const pending = queue.filter((q) => !isDone(q) && late(q) >= 0 && ready(q));
   for (const q of pending.filter((q) => late(q) > MAX_LATE_HOURS)) console.log(`skipped (>${MAX_LATE_HOURS}h late): ${q.key}`);
   const due = pending.filter((q) => late(q) <= MAX_LATE_HOURS);
   console.log(`${due.length} due item(s)`);

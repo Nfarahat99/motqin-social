@@ -10,9 +10,9 @@ on:
         description: "Actually publish (otherwise dry run)"
         type: boolean
         default: false
-  # Enabled only after the owner approves the launch content.
-  # schedule:
-  #   - cron: "*/15 * * * *"
+  # Owner approved the launch on 2026-10-19.
+  schedule:
+    - cron: "*/15 * * * *"
 
 concurrency:
   group: publish
