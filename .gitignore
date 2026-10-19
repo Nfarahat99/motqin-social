@@ -1,0 +1,13 @@
+# Public repo: only what gets published (images, captions, calendar) and the publisher.
+# Internal strategy docs and design sources stay local.
+MARKETING-PLAN.md
+ACCOUNTS-SETUP.md
+OMAR-FEEDBACK.md
+POSTS-BRIEF.md
+CONTENT-CALENDAR.md
+_src/
+node_modules/
+*.env
+.secrets/
+POSTS-CAPTIONS.md
+CONTENT-CALENDAR.csv
