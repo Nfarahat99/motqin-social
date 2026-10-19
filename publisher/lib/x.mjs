@@ -49,6 +49,26 @@ async function call(env, method, url, { json, form } = {}) {
 
 export const xMe = (env) => call(env, "GET", `${API}/2/users/me`);
 
+// v1.1 profile endpoints (name/bio/url/location, avatar, banner) — v2 has no equivalent.
+export async function xUpdateProfile(env, fields) {
+  const url = `${API}/1.1/account/update_profile.json`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: authHeader(env, "POST", url, fields), "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(fields).toString().replace(/\+/g, "%20"),
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`X update_profile → ${res.status}: ${text.slice(0, 300)}`);
+  return JSON.parse(text);
+}
+
+export async function xUpdateImage(env, kind, path) {
+  const url = `${API}/1.1/account/${kind === "banner" ? "update_profile_banner" : "update_profile_image"}.json`;
+  const form = new FormData();
+  form.append(kind === "banner" ? "banner" : "image", new Blob([readFileSync(path)], { type: "image/png" }), basename(path));
+  return call(env, "POST", url, { form });
+}
+
 export async function xUploadImage(env, path) {
   const form = new FormData();
   form.append("media", new Blob([readFileSync(path)], { type: "image/png" }), basename(path));

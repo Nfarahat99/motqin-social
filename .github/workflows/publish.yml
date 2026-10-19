@@ -36,6 +36,7 @@ jobs:
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          X_PAUSED: ${{ vars.X_PAUSED }}
           PUBLIC_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/publisher/public
         run: |
           GO=""
