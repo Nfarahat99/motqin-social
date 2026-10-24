@@ -1,7 +1,7 @@
 // Publishes queue.json items to X / Instagram.
 //   node post.mjs --list                      show items and their status (✓ done, … partial)
 //   node post.mjs --ref P01-X [--go]          one item by caption ref (dry run unless --go)
-//   node post.mjs --due [--go] [--max-late 6] every item whose KSA time has passed, not yet published
+//   node post.mjs --due [--go] [--max-late 24] every item whose KSA time has passed, not yet published
 // Published items are recorded in published.json (each tweet as it lands) so nothing posts twice.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { loadEnv } from "./lib/env.mjs";
@@ -14,7 +14,8 @@ const args = process.argv.slice(2);
 const go = args.includes("--go");
 const argVal = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : undefined);
 // --due only catches up on items at most this many hours late, so an outage never floods the feed.
-const MAX_LATE_HOURS = Number(argVal("--max-late") ?? 6);
+// 24h because GitHub runs the */15 schedule only every 3-5 hours in practice; 6h risked silently skipping posts.
+const MAX_LATE_HOURS = Number(argVal("--max-late") ?? 24);
 
 const env = loadEnv();
 const queue = JSON.parse(readFileSync(`${ROOT}/publisher/queue.json`, "utf8"));
@@ -102,5 +103,5 @@ if (args.includes("--list")) {
   }
   if (failed) process.exitCode = 1;
 } else {
-  console.log("usage: --list | --ref <P01-X> [--go] | --due [--go] [--max-late 6]");
+  console.log("usage: --list | --ref <P01-X> [--go] | --due [--go] [--max-late 24]");
 }
